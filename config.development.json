@@ -1,0 +1,11 @@
+{
+  "port": 3002,
+  "database": "db",
+  "dialect": "sqlite",
+  "storage": "db.sqlite",
+  "controllers": "./controllers",
+  "feature": {
+    "id": "1",
+    "secret": "ZDE4MGZmMTYtNTI5ZC00MmIwLTliZjctNTQzNjBhOTc2ZGFi"
+  }
+}

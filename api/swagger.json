@@ -1,0 +1,253 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "用户权限 API",
+    "description": "用于建立用户-角色-权限的关系",
+    "version": "1.0"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "basePath": "/",
+  "security": [
+    {
+      "cmApiKey": []
+    }
+  ],
+  "paths": {
+
+    "/auth/login": {
+      "post": {
+        "operationId": "user_login",
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          },
+          {
+            "$ref": "#/parameters/credentials"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "operationId": "user_signup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          },
+          {
+            "$ref": "#/parameters/credentials"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      }
+    },
+
+    "/api/users": {
+      "get": {
+        "operationId": "user_findAll",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      },
+      "post": {
+        "operationId": "user_create",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "description": "实体数据",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          },
+          "default": {
+            "$ref": "#/responses/Error"
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "operationId": "user_findOne",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          },
+          {
+            "$ref": "#/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      },
+      "put": {
+        "operationId": "user_update",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          },
+          {
+            "$ref": "#/parameters/id"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "description": "实体数据",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "user_destroy",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-key"
+          },
+          {
+            "$ref": "#/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "id": {
+      "type": "string",
+      "default": "id"
+    },
+    "Error": {
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "object"
+        }
+      }
+    },
+    "Credential": {
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  },
+
+  "parameters": {
+    "id": {
+      "name": "id",
+      "description": "实体 ID",
+      "in": "path",
+      "required": true,
+      "type": "string"
+    },
+    "api-key": {
+      "name": "cm-api-key",
+      "description": "平台发行的 API_KEY",
+      "in": "header",
+      "type": "string",
+      "required": true
+    },
+    "credentials": {
+      "name": "credentials",
+      "description": "凭证",
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/Credential"
+      }
+    }
+  },
+
+  "responses": {
+    "Success": {
+      "description": "成功"
+    },
+    "Error": {
+      "description": "失败"
+    }
+  },
+
+  "securityDefinitions": {
+    "cmApiKey": {
+      "type": "apiKey",
+      "name": "cm-api-key",
+      "in": "header"
+    }
+  }
+}
