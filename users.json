@@ -1,0 +1,114 @@
+[
+  {
+    "id": "e8b35d54-3864-4a4b-a36a-36c057031dfe",
+    "username": "wzf:zxh",
+    "password": "$2a$08$LKrzAGHCv7tGGPUvjXAXhu/kXTww9LaLLIwyFhE15U7L0R5zwrcP6",
+    "createdAt": "2015-09-23T08:09:01.828Z",
+    "updatedAt": "2015-09-29T01:34:17.692Z"
+  },
+  {
+    "id": "2ad53a02-a9b9-4111-8422-6c5a6e30b8f2",
+    "username": "wzf:zhxh",
+    "password": "$2a$08$2t8GPGpE/WlENtoyqkBOcOdoHLrDMkmdUZScdyhwzYFZLWyp3jcqO",
+    "createdAt": "2015-09-23T08:09:52.218Z",
+    "updatedAt": "2015-09-25T03:12:54.142Z"
+  },
+  {
+    "id": "cac5e2d2-1737-4602-96ef-cf8691a73249",
+    "username": "wzf:13601236527",
+    "password": "$2a$08$4yOrKapzJB1/90hWBtcn3OvNKfjAg5YmgOvWqupOusK4HP/gMbwRe",
+    "createdAt": "2015-09-23T08:34:34.701Z",
+    "updatedAt": "2015-09-23T08:34:34.701Z"
+  },
+  {
+    "id": "6868aafe-0de5-4f8d-8a39-077574b54669",
+    "username": "wcc",
+    "password": "$2a$08$ayadpXxV7jG5NGAK6xob0OX190v6N8c.JR/Esfk/e6kH98t8nhd5S",
+    "createdAt": "2015-09-23T08:35:25.950Z",
+    "updatedAt": "2015-09-23T08:35:25.950Z"
+  },
+  {
+    "id": "be86fbb3-e202-43e5-a1be-abebdce9b01e",
+    "username": "wzf:gjh",
+    "password": "$2a$08$TBjsTeirNNcgtbbvC9JtCuDXMB.xuK6xbIX2UeqR.XefTR4br1rg.",
+    "createdAt": "2015-09-23T08:57:28.253Z",
+    "updatedAt": "2015-09-23T08:57:28.253Z"
+  },
+  {
+    "id": "533b3cb7-b3cd-4103-84ba-e06aa5be8785",
+    "username": "13466572983",
+    "password": "$2a$08$y1QzJVcgSXM.ZhvKI6IMY.xD4wzDTV1e09wpdxVoG1OjWDCziWLKe",
+    "createdAt": "2015-09-23T09:26:02.141Z",
+    "updatedAt": "2015-09-23T09:26:02.141Z"
+  },
+  {
+    "id": "a0700688-66b3-43bf-b4e5-c2605d61edac",
+    "username": "13466573983",
+    "password": "$2a$08$jwZVGKZq55rJWBIQ.baGd.Z5qxL0fkG1b5qkmTyrgKM5pOkIdsEdW",
+    "createdAt": "2015-09-23T09:31:19.170Z",
+    "updatedAt": "2015-09-23T09:31:19.170Z"
+  },
+  {
+    "id": "e896a12c-b525-4bee-89f9-3fae3027cf8f",
+    "username": "13466573985",
+    "password": "$2a$08$ICmfCMP1jbenvTaCDIlK3.RV2oqoHn8exWrqlFu7afXRmPoo8dnj2",
+    "createdAt": "2015-09-23T09:34:16.366Z",
+    "updatedAt": "2015-09-23T09:34:16.366Z"
+  },
+  {
+    "id": "00a212c9-e21d-4fe5-9ca9-a0b259443a5b",
+    "username": "wzf:18905391839",
+    "password": "$2a$08$VbEkA6AE4uJ7AzUxS6I62uTxvxbE0pubrAyXTRtuAgLbOvzURW1I.",
+    "createdAt": "2015-09-23T09:36:30.066Z",
+    "updatedAt": "2015-09-23T09:36:30.066Z"
+  },
+  {
+    "id": "d154db4d-ef28-4bb8-a3b2-5f3eb62c1bb3",
+    "username": "wzf:13141240566",
+    "password": "$2a$08$WO1SxU6iNBhWE0dCEdHKjuO5MW2Q4B73jsfc2DVLk.ATRIn2MSgAm",
+    "createdAt": "2015-09-24T03:13:47.301Z",
+    "updatedAt": "2015-09-24T03:13:47.301Z"
+  },
+  {
+    "id": "fab31281-62e0-42f1-aefd-5d6a3457f861",
+    "username": "wzf:test",
+    "password": "$2a$08$/ReX8PL6bOgZkTkYl8lWDOSdY0WLQEhONERs938On7zXBpxJjqsWm",
+    "createdAt": "2015-09-24T06:26:02.596Z",
+    "updatedAt": "2015-09-24T08:12:08.959Z"
+  },
+  {
+    "id": "2b53d86b-daf8-4b5e-96af-d052b0d3131f",
+    "username": "asdf",
+    "password": "$2a$08$yQK29Ie6U.ydNJPo6is7Qu77jxYuoFGhwWvXKy02Q4tzSQ4bcwnBu",
+    "createdAt": "2015-09-24T08:07:29.999Z",
+    "updatedAt": "2015-09-24T08:07:36.894Z"
+  },
+  {
+    "id": "d7131896-8f95-4712-a0de-367adad67413",
+    "username": "wzf:zzz",
+    "password": "$2a$08$yfmQgRtKwKJy2LxlxtxfGuGLhaxz1fuO75C0HVMM7R3E8VV33tiiS",
+    "createdAt": "2015-09-24T08:49:22.104Z",
+    "updatedAt": "2015-09-25T07:08:17.976Z"
+  },
+  {
+    "id": "67593179-0e25-4b6f-8246-fe1c37c30e13",
+    "username": "wzf:web",
+    "password": "$2a$08$WEoM9nvYeKUr.yD9rOP/H.J2J/clYcb.TIwGQCAiQXThQNbx1PaCq",
+    "createdAt": "2015-09-25T06:51:36.842Z",
+    "updatedAt": "2015-09-25T07:22:23.548Z"
+  },
+  {
+    "id": "81b02f0e-8133-455b-9636-4c5165fb4d98",
+    "username": "wzf:wtl",
+    "password": "$2a$08$DlvETbpceG6shLq.PExXEeyIqvMsriXSwFNrpWWT5SZ7TsBl5lo2q",
+    "createdAt": "2015-09-28T01:48:10.504Z",
+    "updatedAt": "2015-09-28T01:52:00.303Z"
+  },
+  {
+    "id": "d6323158-2138-427d-95c4-9bf7e977ae18",
+    "username": "wzf:18500090618",
+    "password": "$2a$08$Auw468m5sMbTDC71NvI7sOk7leAxxNsDXyLRpBG6TfwU/Px.UO4hC",
+    "createdAt": "2015-09-28T09:41:15.308Z",
+    "updatedAt": "2015-09-28T10:49:36.562Z"
+  }
+]

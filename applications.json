@@ -1,0 +1,14 @@
+[
+  {
+    "id": "2",
+    "secret": "ODUwZmQyZmYtMTk3NC00ZGRmLTgzYzItMzczOTg2MTBiZmMx",
+    "createdAt": "2015-09-17T10:00:13.457Z",
+    "updatedAt": "2015-09-17T10:00:13.457Z"
+  },
+  {
+    "id": "3",
+    "secret": "ZmNlYmUzYjMtOGI3MC00MjI0LWI3YTktMGUyMzE5NDNiMTI1",
+    "createdAt": "2015-09-22T02:09:49.205Z",
+    "updatedAt": "2015-09-22T02:09:49.205Z"
+  }
+]
