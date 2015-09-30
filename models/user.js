@@ -47,7 +47,7 @@ module.exports = function(sequelize) {
       signup: function(credentials, appId) {
         assert(appId, 'must have appId');
         var User = this;
-        var Application = require('.').Application;
+        var Application = require('./index').Application;
 
         return Application
           .findOrCreate({
@@ -106,7 +106,8 @@ module.exports = function(sequelize) {
 
     hooks: {
       beforeCreate: hashPassword,
-      beforeUpdate: hashPassword
+      beforeUpdate: hashPassword,
+      beforeBulkUpdate: bulkHashPassword
     },
 
     scopes: {
@@ -132,4 +133,12 @@ function hashPassword(user, options) {
       resolve();
     });
   });
+}
+
+function bulkHashPassword(name, fn) {
+  return hashPassword(name.attributes)
+    .then(function() {
+      console.log(name);
+      fn();
+    });
 }
