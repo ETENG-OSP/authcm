@@ -1,21 +1,9 @@
 var express = require('express');
-var nconf = require('nconf');
 var cors = require('cors');
 var swaggerTools = require('swagger-tools');
 
-nconf
-  .argv()
-  .env()
-  .defaults({
-    NODE_ENV: 'development'
-  });
-
-var filename = './config.' + nconf.get('NODE_ENV') + '.json';
-console.log(filename);
-
-nconf.file({file: filename});
-
 var cmUtils = require('./cm-utils');
+var nconf = require('./nconf');
 var models = require('./models');
 var swaggerObject = require('./api/swagger');
 

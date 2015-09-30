@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var nconf = require('nconf');
+var nconf = require('../nconf');
 
 var database = nconf.get('database');
 var username = nconf.get('username');

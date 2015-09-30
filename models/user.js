@@ -3,7 +3,7 @@ var assert = require('assert');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var uuid = require('uuid');
-var nconf = require('nconf');
+var nconf = require('../nconf');
 
 module.exports = function(sequelize) {
 
@@ -124,7 +124,7 @@ module.exports = function(sequelize) {
 
 };
 
-function hashPassword(user, options) {
+function hashPassword(user) {
   // console.log('======== hash password', user);
   return new Promise(function(resolve, reject) {
     bcrypt.hash(user.password, 8, function(err, hash) {

@@ -1,7 +1,8 @@
 var jwt = require('jsonwebtoken');
 var debuglog = require('util').debuglog('security');
-var nconf = require('nconf');
 var assert = require('assert');
+
+var nconf = require('./nconf');
 
 module.exports = function(config) {
 

@@ -1,4 +1,4 @@
-var nconf = require('nconf');
+var nconf = require('./nconf');
 nconf.file({file: './config.development.json'});
 
 var models = require('./models');
