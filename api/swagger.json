@@ -177,6 +177,9 @@
         },
         "password": {
           "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
         }
       }
     },
