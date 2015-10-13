@@ -130,7 +130,8 @@ module.exports = function(sequelize) {
 };
 
 function hashPassword(user, options) {
-  // console.log('======== hash password', user);
+  // console.log('======== hash password');
+  // console.log(user);
   return new Promise(function(resolve, reject) {
     bcrypt.hash(user.password, 8, function(err, hash) {
       if (err) return reject(err);
@@ -141,9 +142,17 @@ function hashPassword(user, options) {
 }
 
 function bulkHashPassword(name, fn) {
-  return hashPassword(name.attributes)
-    .then(function() {
-      console.log(name);
-      fn();
-    });
+  // console.log('======== bulk hash password');
+
+  if (name.attributes.password) {
+    return hashPassword(name.attributes)
+      .then(function() {
+        console.log('===== bulk hash done');
+        console.log(name);
+        fn();
+      });
+  } else {
+    return fn();
+  }
+
 }
