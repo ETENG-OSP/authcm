@@ -21,6 +21,8 @@ module.exports = function(sequelize) {
       unique: true
     },
 
+    disabled: Sequelize.BOOLEAN,
+
     password: {
       type: 'string',
       allowNull: false
@@ -39,6 +41,9 @@ module.exports = function(sequelize) {
           .then(function(user) {
             if (!user) {
               throw new Error('用户不存在');
+            }
+            if (user.disabled) {
+              throw new Error('用户被禁用');
             }
             return user.comparePassword(credentials.password);
           });
