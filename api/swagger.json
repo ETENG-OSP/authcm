@@ -23,12 +23,8 @@
       "post": {
         "operationId": "user_login",
         "parameters": [
-          {
-            "$ref": "#/parameters/api-key"
-          },
-          {
-            "$ref": "#/parameters/credentials"
-          }
+          {"$ref": "#/parameters/api-key"},
+          {"$ref": "#/parameters/credentials"}
         ],
         "responses": {
           "200": {
@@ -37,21 +33,16 @@
         }
       }
     },
+
     "/auth/signup": {
       "post": {
         "operationId": "user_signup",
         "parameters": [
-          {
-            "$ref": "#/parameters/api-key"
-          },
-          {
-            "$ref": "#/parameters/credentials"
-          }
+          {"$ref": "#/parameters/api-key"},
+          {"$ref": "#/parameters/credentials"}
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/Success"
-          }
+          "200": {"$ref": "#/responses/Success"}
         }
       }
     },
@@ -63,14 +54,12 @@
           "user"
         ],
         "parameters": [
-          {
-            "$ref": "#/parameters/api-key"
-          }
+          {"$ref": "#/parameters/page"},
+          {"$ref": "#/parameters/perpage"},
+          {"$ref": "#/parameters/filters"}
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/Success"
-          }
+          "200": {"$ref": "#/responses/Success"}
         }
       },
       "post": {
@@ -79,9 +68,7 @@
           "user"
         ],
         "parameters": [
-          {
-            "$ref": "#/parameters/api-key"
-          },
+          {"$ref": "#/parameters/api-key"},
           {
             "name": "data",
             "in": "body",
@@ -206,6 +193,16 @@
           "type": "string"
         }
       }
+    },
+    "Pagination": {
+      "properties": {
+        "_page": {
+          "type": "number"
+        },
+        "_perPage": {
+          "type": "number"
+        }
+      }
     }
   },
 
@@ -230,6 +227,32 @@
       "in": "body",
       "schema": {
         "$ref": "#/definitions/Credential"
+      }
+    },
+    "code": {
+      "description": "编码",
+      "name": "code",
+      "in": "query",
+      "type": "string"
+    },
+    "perpage": {
+      "description": "每页条数",
+      "name": "_perPage",
+      "in": "query",
+      "type": "integer"
+    },
+    "page": {
+      "description": "分页页数",
+      "name": "_page",
+      "in": "query",
+      "type": "integer"
+    },
+    "filters": {
+      "description": "筛选条件",
+      "name": "_filters",
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/Pagination"
       }
     }
   },

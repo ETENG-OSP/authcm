@@ -24,19 +24,19 @@ swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
   };
 
   var securityOptions = {
-    cmApiKey: require('./cm-security')({
-      id: nconf.get('feature:id'),
-      secret: nconf.get('feature:secret')
-    })
+    tokenName: nconf.get('security:tokenName'),
+    id: nconf.get('feature:id'),
+    secret: nconf.get('feature:secret')
   };
 
   var app = express();
   app.use(cors());
   app.use(cmUtils());
-  app.use(middleware.swaggerMetadata());
-  app.use(middleware.swaggerSecurity(securityOptions));
-  app.use(middleware.swaggerRouter(routerOptions));
   app.use(middleware.swaggerUi());
+
+  app.use(require('./utils/security')());
+  app.use(middleware.swaggerMetadata());
+  app.use(middleware.swaggerRouter(routerOptions));
   app.use(errorHandler());
   // app.use(require('./inspector'));
 

@@ -6,7 +6,7 @@ module.exports = function(sequelize) {
   return sequelize.define('application', {
 
     id: {
-      type: Sequelize.STRING,
+      type: Sequelize.CHAR(36).BINARY,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
     },
