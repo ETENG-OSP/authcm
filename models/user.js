@@ -3,7 +3,6 @@ var assert = require('assert');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var uuid = require('uuid');
-var nconf = require('../nconf');
 
 module.exports = function(sequelize) {
 
@@ -17,9 +16,10 @@ module.exports = function(sequelize) {
 
     username: {
       type: 'string',
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
+
+    disabled: Sequelize.BOOLEAN,
 
     password: {
       type: 'string',
@@ -27,6 +27,13 @@ module.exports = function(sequelize) {
     }
 
   }, {
+
+    indexes: [
+      {
+        unique: true,
+        fields: ['username', 'applicationId']
+      }
+    ],
 
     classMethods: {
 
@@ -39,6 +46,9 @@ module.exports = function(sequelize) {
           .then(function(user) {
             if (!user) {
               throw new Error('用户不存在');
+            }
+            if (user.disabled) {
+              throw new Error('用户被禁用');
             }
             return user.comparePassword(credentials.password);
           });
@@ -69,7 +79,7 @@ module.exports = function(sequelize) {
 
     instanceMethods: {
 
-      createAccessToken: function() {
+      createAccessToken: function(issuer) {
         var user = this;
         return user
           .getApplication()
@@ -77,12 +87,11 @@ module.exports = function(sequelize) {
             var secret = application.secret;
             var userId = user.id;
             var appId = application.id;
-            var featureId = nconf.get('featureId');
 
             return jwt.sign({}, secret, {
               audience: appId,
               subject: userId,
-              issuer: featureId
+              issuer: issuer
             });
           });
       },
@@ -124,8 +133,9 @@ module.exports = function(sequelize) {
 
 };
 
-function hashPassword(user) {
-  // console.log('======== hash password', user);
+function hashPassword(user, options) {
+  // console.log('======== hash password');
+  // console.log(user);
   return new Promise(function(resolve, reject) {
     bcrypt.hash(user.password, 8, function(err, hash) {
       if (err) return reject(err);
@@ -136,9 +146,17 @@ function hashPassword(user) {
 }
 
 function bulkHashPassword(name, fn) {
-  return hashPassword(name.attributes)
-    .then(function() {
-      console.log(name);
-      fn();
-    });
+  // console.log('======== bulk hash password');
+
+  if (name.attributes.password) {
+    return hashPassword(name.attributes)
+      .then(function() {
+        console.log('===== bulk hash done');
+        console.log(name);
+        fn();
+      });
+  } else {
+    return fn();
+  }
+
 }

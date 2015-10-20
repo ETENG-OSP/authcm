@@ -23,8 +23,9 @@
       "post": {
         "operationId": "user_login",
         "parameters": [
-          {"$ref": "#/parameters/api-key"},
-          {"$ref": "#/parameters/credentials"}
+          {
+            "$ref": "#/parameters/credentials"
+          }
         ],
         "responses": {
           "200": {
@@ -38,8 +39,9 @@
       "post": {
         "operationId": "user_signup",
         "parameters": [
-          {"$ref": "#/parameters/api-key"},
-          {"$ref": "#/parameters/credentials"}
+          {
+            "$ref": "#/parameters/credentials"
+          }
         ],
         "responses": {
           "200": {"$ref": "#/responses/Success"}
@@ -54,9 +56,35 @@
           "user"
         ],
         "parameters": [
-          {"$ref": "#/parameters/page"},
-          {"$ref": "#/parameters/perpage"},
-          {"$ref": "#/parameters/filters"}
+          {
+            "name": "_perPage",
+            "type": "integer",
+            "in": "query"
+          },
+          {
+            "name": "_page",
+            "type": "integer",
+            "in": "query"
+          },
+          {
+            "name": "_sortField",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "_sortDir",
+            "type": "string",
+            "in": "query",
+            "enum": [
+              "ASC",
+              "DESC"
+            ]
+          },
+          {
+            "name": "_filters",
+            "type": "string",
+            "in": "query"
+          }
         ],
         "responses": {
           "200": {"$ref": "#/responses/Success"}
@@ -68,7 +96,6 @@
           "user"
         ],
         "parameters": [
-          {"$ref": "#/parameters/api-key"},
           {
             "name": "data",
             "in": "body",
@@ -90,14 +117,11 @@
     },
     "/api/users/{id}": {
       "get": {
-        "operationId": "user_findOne",
+        "operationId": "user_findById",
         "tags": [
           "user"
         ],
         "parameters": [
-          {
-            "$ref": "#/parameters/api-key"
-          },
           {
             "$ref": "#/parameters/id"
           }
@@ -114,9 +138,6 @@
           "user"
         ],
         "parameters": [
-          {
-            "$ref": "#/parameters/api-key"
-          },
           {
             "$ref": "#/parameters/id"
           },
@@ -142,9 +163,6 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/api-key"
-          },
-          {
             "$ref": "#/parameters/id"
           }
         ],
@@ -164,6 +182,9 @@
         },
         "password": {
           "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
         }
       }
     },
@@ -213,13 +234,6 @@
       "in": "path",
       "required": true,
       "type": "string"
-    },
-    "api-key": {
-      "name": "cm-api-key",
-      "description": "平台发行的 API_KEY",
-      "in": "header",
-      "type": "string",
-      "required": true
     },
     "credentials": {
       "name": "credentials",

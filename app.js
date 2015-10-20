@@ -1,26 +1,17 @@
 var express = require('express');
 var cors = require('cors');
 var swaggerTools = require('swagger-tools');
+var errorhandler = require('errorhandler');
 
-var cmUtils = require('./cm-utils');
 var nconf = require('./nconf');
-var models = require('./models');
 var swaggerObject = require('./api/swagger');
-
-function errorHandler() {
-  return function(err, req, res, next) {
-    console.log('cmApiKeyhandle error:', err);
-    res.status(500).json({
-      message: err.message,
-      detail: err
-    });
-  };
-}
+var security = require('./utils/security');
+var param = require('./utils/param');
 
 swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
 
   var routerOptions = {
-    controllers: nconf.get('controllers')
+    controllers: __dirname + '/' + nconf.get('swagger:controllers')
   };
 
   var securityOptions = {
@@ -31,21 +22,19 @@ swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
 
   var app = express();
   app.use(cors());
-  app.use(cmUtils());
   app.use(middleware.swaggerUi());
 
-  app.use(require('./utils/security')());
+  app.use(security(securityOptions));
+  app.use(param());
+
   app.use(middleware.swaggerMetadata());
   app.use(middleware.swaggerRouter(routerOptions));
-  app.use(errorHandler());
+
+  app.use(errorhandler());
   // app.use(require('./inspector'));
 
-  models.sequelize.sync().then(function() {
-
-    app.listen(nconf.get('port'), function() {
-      console.log('started');
-    });
-
+  app.listen(nconf.get('port'), function() {
+    console.log('started');
   });
 
 });

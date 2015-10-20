@@ -5,7 +5,7 @@ nconf.argv().env().defaults({
   NODE_ENV: 'development'
 });
 
-var filename = './config.' + nconf.get('NODE_ENV') + '.json';
+var filename = __dirname + '/config.' + nconf.get('NODE_ENV') + '.json';
 debuglog('using config file: %s', filename);
 nconf.file({file: filename});
 

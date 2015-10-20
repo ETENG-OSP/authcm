@@ -19,7 +19,7 @@ module.exports = function(config) {
     req.cm = req.cm || {};
 
     req.cm.apiKey = function() {
-      var token = req.get(tokenName) || req.query[tokenName];
+      var token = getToken();
       console.log('get api key', token);
       assert(token, 'token must set');
       return token;
@@ -40,6 +40,22 @@ module.exports = function(config) {
       } catch (err) {
         next(err);
       }
+    }
+
+    function getToken() {
+      var token;
+      var currentName;
+      if (Array.isArray(tokenName)) {
+        for (var i = 0; i < tokenName.length; ++i) {
+          currentName = tokenName[i];
+          token = req.get(currentName) || req.query[currentName];
+          if (token) break;
+        }
+      } else {
+        token = req.get(tokenName) || req.query[tokenName];
+      }
+
+      return token;
     }
 
   };
