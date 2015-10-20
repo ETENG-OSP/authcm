@@ -3,7 +3,6 @@ var assert = require('assert');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var uuid = require('uuid');
-var nconf = require('nconf');
 
 module.exports = function(sequelize) {
 
@@ -17,8 +16,7 @@ module.exports = function(sequelize) {
 
     username: {
       type: 'string',
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
 
     disabled: Sequelize.BOOLEAN,
@@ -29,6 +27,13 @@ module.exports = function(sequelize) {
     }
 
   }, {
+
+    indexes: [
+      {
+        unique: true,
+        fields: ['username', 'applicationId']
+      }
+    ],
 
     classMethods: {
 
@@ -74,7 +79,7 @@ module.exports = function(sequelize) {
 
     instanceMethods: {
 
-      createAccessToken: function() {
+      createAccessToken: function(issuer) {
         var user = this;
         return user
           .getApplication()
@@ -82,12 +87,11 @@ module.exports = function(sequelize) {
             var secret = application.secret;
             var userId = user.id;
             var appId = application.id;
-            var featureId = nconf.get('featureId');
 
             return jwt.sign({}, secret, {
               audience: appId,
               subject: userId,
-              issuer: featureId
+              issuer: issuer
             });
           });
       },

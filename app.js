@@ -1,63 +1,40 @@
 var express = require('express');
-var nconf = require('nconf');
 var cors = require('cors');
 var swaggerTools = require('swagger-tools');
+var errorhandler = require('errorhandler');
 
-nconf
-  .argv()
-  .env()
-  .defaults({
-    NODE_ENV: 'development'
-  });
-
-var filename = './config.' + nconf.get('NODE_ENV') + '.json';
-console.log(filename);
-
-nconf.file({file: filename});
-
-var cmUtils = require('./cm-utils');
-var models = require('./models');
+var nconf = require('./nconf');
 var swaggerObject = require('./api/swagger');
-
-function errorHandler() {
-  return function(err, req, res, next) {
-    console.log('cmApiKeyhandle error:', err);
-    res.status(500).json({
-      message: err.message,
-      detail: err
-    });
-  };
-}
+var security = require('./utils/security');
+var param = require('./utils/param');
 
 swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
 
   var routerOptions = {
-    controllers: nconf.get('controllers')
+    controllers: __dirname + '/' + nconf.get('swagger:controllers')
   };
 
   var securityOptions = {
-    cmApiKey: require('./cm-security')({
-      id: nconf.get('feature:id'),
-      secret: nconf.get('feature:secret')
-    })
+    tokenName: nconf.get('security:tokenName'),
+    id: nconf.get('feature:id'),
+    secret: nconf.get('feature:secret')
   };
 
   var app = express();
   app.use(cors());
-  app.use(cmUtils());
-  app.use(middleware.swaggerMetadata());
-  app.use(middleware.swaggerSecurity(securityOptions));
-  app.use(middleware.swaggerRouter(routerOptions));
   app.use(middleware.swaggerUi());
-  app.use(errorHandler());
+
+  app.use(security(securityOptions));
+  app.use(param());
+
+  app.use(middleware.swaggerMetadata());
+  app.use(middleware.swaggerRouter(routerOptions));
+
+  app.use(errorhandler());
   // app.use(require('./inspector'));
 
-  models.sequelize.sync().then(function() {
-
-    app.listen(nconf.get('port'), function() {
-      console.log('started');
-    });
-
+  app.listen(nconf.get('port'), function() {
+    console.log('started');
   });
 
 });
