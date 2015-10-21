@@ -11,12 +11,6 @@ module.exports = function() {
       }
     };
 
-    req.cm.getInclude = function() {
-
-    };
-
-
-
     next();
   };
 };

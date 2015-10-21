@@ -20,8 +20,12 @@ swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
     secret: nconf.get('feature:secret')
   };
 
+  var corsOptions = {
+    exposedHeaders: ['X-Total-Count']
+  };
+
   var app = express();
-  app.use(cors());
+  app.use(cors(corsOptions));
   app.use(middleware.swaggerUi());
 
   app.use(security(securityOptions));
