@@ -39,4 +39,8 @@ function login(req, res, next) {
     .catch(next);
 }
 
+function refresh(req, res, next) {
+  jwt.sign();
+}
+
 module.exports = userController;

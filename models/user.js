@@ -91,7 +91,8 @@ module.exports = function(sequelize) {
             return jwt.sign({}, secret, {
               audience: appId,
               subject: userId,
-              issuer: issuer
+              issuer: issuer,
+              expiresIn: '7d'
             });
           });
       },
