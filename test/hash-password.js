@@ -32,8 +32,10 @@ describe('user', function() {
     it('update should be hash', function() {
       var newPassword = faker.internet.password();
       return User
-        .update({password: newPassword}, {
-          where: {id: userId}
+        .findById(userId)
+        .then(function(user) {
+          user.set('password', newPassword);
+          return user.save();
         })
         .then(function() {
           return User
