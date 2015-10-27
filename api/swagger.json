@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "用户权限 API",
-    "description": "用于建立用户-角色-权限的关系",
+    "title": "身份验证 API",
+    "description": "用于建立登录注册，以及 token 管理",
     "version": "1.0"
   },
   "produces": ["application/json"],
@@ -14,6 +14,7 @@
     "/token/revoke": {
       "post": {
         "operationId": "access-token_revoke",
+        "description": "吊销用户 AccessToken。AccessToken 是用户登录后获得的 token。一旦一个用户的 AccessToken 被吊销，之前发行的全部 AccessToken 都会被吊销。可以在用户登出时调用。",
         "tags": ["token"],
         "parameters": [
           {"$ref": "#/parameters/token"}
@@ -29,6 +30,7 @@
     "/token/is-revoked": {
       "post": {
         "operationId": "access-token_isRevoked",
+        "description": "检查用户的 AccessToken 是否被吊销。这个接口应该在 Token 完成校验后调用，以保证统一的吊销状态。",
         "tags": ["token"],
         "parameters": [
           {"$ref": "#/parameters/token"}
@@ -44,6 +46,7 @@
     "/token/refresh": {
       "post": {
         "operationId": "access-token_refresh",
+        "description": "刷新 AccessToken 的有效期，将时间延长到 refresh 接口被调用的七天后。调用后应该把新的 token 存储到应用中。",
         "tags": ["token"],
         "parameters": [
           {"$ref": "#/parameters/token"}
@@ -60,6 +63,7 @@
       "post": {
         "operationId": "user_login",
         "tags": ["auth"],
+        "description": "用户登录。登录后会返回 AccessToken。",
         "parameters": [
           {"$ref": "#/parameters/credentials"}
         ],
