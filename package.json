@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bcrypt": "^0.8.5",
+    "bluebird": "^2.10.2",
     "cors": "^2.7.1",
     "errorhandler": "^1.4.2",
     "express": "^4.13.3",
