@@ -7,7 +7,7 @@ function resourceControllerFactory(Model, related) {
   return {
 
     findAll: function(req, res, next) {
-      Model
+      return Model
         .findAndCountAll({
           where: query.getWhere(req),
           include: query.getInclude(req, Model),
@@ -19,7 +19,7 @@ function resourceControllerFactory(Model, related) {
           var count = result.count;
           var entities = result.rows;
           res.set('X-Total-Count', count);
-          res.json(entities);
+          return res.json(entities);
         })
         .catch(next);
     },
@@ -27,13 +27,12 @@ function resourceControllerFactory(Model, related) {
     create: function(req, res, next) {
       var data = req.cm.param('data');
       var appId = req.cm.appId();
-
       data.applicationId = appId;
 
-      Model
+      return Model
         .create(data)
         .then(function(entity) {
-          res.json(entity);
+          return res.json(entity);
         })
         .catch(next);
     },
@@ -41,12 +40,12 @@ function resourceControllerFactory(Model, related) {
     findById: function(req, res, next) {
       var id = req.cm.param('id');
 
-      Model
+      return Model
         .findById(id, {
           include: query.getInclude(req, Model)
         })
         .then(function(entity) {
-          res.json(entity);
+          return res.json(entity);
         })
         .catch(next);
     },
@@ -56,29 +55,40 @@ function resourceControllerFactory(Model, related) {
       var data = req.cm.param('data');
 
       return Model
-        .update(data, {where: {id: id}})
-        .then(function(result) {
-          return Model.findOne({where: {id: id}});
+        .findById()
+        .then(function(entity) {
+          return entity.update(data);
         })
         .then(function(entity) {
-          // return res.json(entity);
-          return updateRelated(entity, data, related)
-            .then(function() {
-              return res.json(entity);
-            });
+          return res.json(entity);
         })
         .catch(next);
+
+      // return Model
+      //   .update(data, {where: {id: id}})
+      //   .then(function(result) {
+      //     return Model.findOne({where: {id: id}});
+      //   })
+      //   .then(function(entity) {
+      //     // return res.json(entity);
+      //     return updateRelated(entity, data, related)
+      //       .then(function() {
+      //         return res.json(entity);
+      //       });
+      //   })
+      //   .catch(next);
     },
 
     destroy: function(req, res, next) {
       var id = req.cm.param('id');
-      Model
-        .destroy({where: {id: id}})
-        .then(function(count) {
-          res.json({
-            message: 'ok',
-            detail: {count: count}
-          });
+
+      return Model
+        .findById(id)
+        .then(function(instance) {
+          return instance.destroy();
+        })
+        .then(function(instance) {
+          return res.json(instance);
         })
         .catch(next);
     }
@@ -87,21 +97,21 @@ function resourceControllerFactory(Model, related) {
 
 }
 
-function updateRelated(entity, data, related) {
-  var taskArray = _.reduce(data, function(memo, value, key) {
-    if (value && related && related[key]) {
-      var fnName = 'set' + capitalizeFirstLetter(key);
-
-      console.log('fnName', fnName);
-      memo.push(entity[fnName](value));
-    }
-    return memo;
-  }, []);
-  return Promise.all(taskArray);
-}
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+// function updateRelated(entity, data, related) {
+//   var taskArray = _.reduce(data, function(memo, value, key) {
+//     if (value && related && related[key]) {
+//       var fnName = 'set' + capitalizeFirstLetter(key);
+//
+//       console.log('fnName', fnName);
+//       memo.push(entity[fnName](value));
+//     }
+//     return memo;
+//   }, []);
+//   return Promise.all(taskArray);
+// }
+//
+// function capitalizeFirstLetter(string) {
+//   return string.charAt(0).toUpperCase() + string.slice(1);
+// }
 
 module.exports = resourceControllerFactory;

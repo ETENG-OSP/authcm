@@ -1,6 +1,5 @@
 var Sequelize = require('sequelize');
 var assert = require('assert');
-var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var uuid = require('uuid');
 
@@ -24,7 +23,9 @@ module.exports = function(sequelize) {
     password: {
       type: 'string',
       allowNull: false
-    }
+    },
+
+    revokedAt: Sequelize.DATE
 
   }, {
 
@@ -37,11 +38,11 @@ module.exports = function(sequelize) {
 
     classMethods: {
 
-      login: function(credentials) {
+      login: function(credentials, appId) {
         var User = this;
         return User
           .findOne({
-            where: {username: credentials.username}
+            where: {username: credentials.username, applicationId: appId}
           })
           .then(function(user) {
             if (!user) {
@@ -61,9 +62,7 @@ module.exports = function(sequelize) {
 
         return Application
           .findOrCreate({
-            where: {
-              id: appId
-            }
+            where: {id: appId}
           })
           .then(function() {
             return User
@@ -78,24 +77,6 @@ module.exports = function(sequelize) {
     },
 
     instanceMethods: {
-
-      createAccessToken: function(issuer) {
-        var user = this;
-        return user
-          .getApplication()
-          .then(function(application) {
-            var secret = application.secret;
-            var userId = user.id;
-            var appId = application.id;
-
-            return jwt.sign({}, secret, {
-              audience: appId,
-              subject: userId,
-              issuer: issuer,
-              expiresIn: '7d'
-            });
-          });
-      },
 
       comparePassword: function(password) {
         var user = this;
@@ -115,49 +96,35 @@ module.exports = function(sequelize) {
     },
 
     hooks: {
-      beforeCreate: hashPassword,
-      beforeUpdate: hashPassword,
-      beforeBulkUpdate: bulkHashPassword
-    },
-
-    scopes: {
-      realm: function(value) {
-        return {
-          where: {
-            applicationId: value
-          }
-        };
-      }
+      beforeCreate: [hashPassword, setRevokedAt],
+      beforeUpdate: [hashPassword, setRevokedAt],
+      beforeBulkUpdate: [bulkHashPassword, bulkSetRevokedAt]
     }
 
   });
 
 };
 
-function hashPassword(user, options) {
-  // console.log('======== hash password');
-  // console.log(user);
-  return new Promise(function(resolve, reject) {
-    bcrypt.hash(user.password, 8, function(err, hash) {
-      if (err) return reject(err);
-      user.password = hash;
-      resolve();
-    });
+function setRevokedAt(user) {
+  if (user.disabled) {
+    user.revokedAt = createTimestamp();
+  }
+}
+
+function bulkSetRevokedAt(instance) {
+}
+
+function hashPassword(user, options, done) {
+  bcrypt.hash(user.password, 8, function(err, hash) {
+    if (err) throw err;
+    user.password = hash;
+    done();
   });
 }
 
-function bulkHashPassword(name, fn) {
-  // console.log('======== bulk hash password');
-
-  if (name.attributes.password) {
-    return hashPassword(name.attributes)
-      .then(function() {
-        console.log('===== bulk hash done');
-        console.log(name);
-        fn();
-      });
-  } else {
-    return fn();
+function bulkHashPassword(instance, done) {
+  if (instance.attributes.password) {
+    return hashPassword(instance.attributes, null, done);
   }
-
+  return done();
 }

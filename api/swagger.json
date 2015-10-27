@@ -5,27 +5,63 @@
     "description": "用于建立用户-角色-权限的关系",
     "version": "1.0"
   },
-  "produces": [
-    "application/json"
-  ],
-  "consumes": [
-    "application/json"
-  ],
+  "produces": ["application/json"],
+  "consumes": ["application/json"],
   "basePath": "/",
-  "security": [
-    {
-      "cmApiKey": []
-    }
-  ],
+  "security": [{"cmApiKey": []}],
   "paths": {
+
+    "/token/revoke": {
+      "post": {
+        "operationId": "access-token_revoke",
+        "tags": ["token"],
+        "parameters": [
+          {"$ref": "#/parameters/token"}
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      }
+    },
+
+    "/token/is-revoked": {
+      "post": {
+        "operationId": "access-token_isRevoked",
+        "tags": ["token"],
+        "parameters": [
+          {"$ref": "#/parameters/token"}
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      }
+    },
+
+    "/token/refresh": {
+      "post": {
+        "operationId": "access-token_refresh",
+        "tags": ["token"],
+        "parameters": [
+          {"$ref": "#/parameters/token"}
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/Success"
+          }
+        }
+      }
+    },
 
     "/auth/login": {
       "post": {
         "operationId": "user_login",
+        "tags": ["auth"],
         "parameters": [
-          {
-            "$ref": "#/parameters/credentials"
-          }
+          {"$ref": "#/parameters/credentials"}
         ],
         "responses": {
           "200": {
@@ -38,10 +74,9 @@
     "/auth/signup": {
       "post": {
         "operationId": "user_signup",
+        "tags": ["auth"],
         "parameters": [
-          {
-            "$ref": "#/parameters/credentials"
-          }
+          {"$ref": "#/parameters/credentials"}
         ],
         "responses": {
           "200": {"$ref": "#/responses/Success"}
@@ -50,131 +85,77 @@
     },
 
     "/api/users": {
+
       "get": {
         "operationId": "user_findAll",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
-          {
-            "name": "_perPage",
-            "type": "integer",
-            "in": "query"
-          },
-          {
-            "name": "_page",
-            "type": "integer",
-            "in": "query"
-          },
-          {
-            "name": "_sortField",
-            "type": "string",
-            "in": "query"
-          },
-          {
-            "name": "_sortDir",
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "ASC",
-              "DESC"
-            ]
-          },
-          {
-            "name": "_filters",
-            "type": "string",
-            "in": "query"
-          }
+          {"$ref": "#/parameters/perPage"},
+          {"$ref": "#/parameters/page"},
+          {"$ref": "#/parameters/sortField"},
+          {"$ref": "#/parameters/sortDir"},
+          {"$ref": "#/parameters/filters"}
         ],
         "responses": {
           "200": {"$ref": "#/responses/Success"}
         }
       },
+
       "post": {
         "operationId": "user_create",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
-          {
-            "name": "data",
-            "in": "body",
-            "description": "实体数据",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
+          {"$ref": "#/parameters/userData"}
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/Success"
-          },
-          "default": {
-            "$ref": "#/responses/Error"
-          }
+          "200": {"$ref": "#/responses/Success"},
+          "default": {"$ref": "#/responses/Error"}
         }
       }
+
     },
+
     "/api/users/{id}": {
+
       "get": {
         "operationId": "user_findById",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
-          {
-            "$ref": "#/parameters/id"
-          }
+          {"$ref": "#/parameters/id"}
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/Success"
-          }
+          "200": {"$ref": "#/responses/Success"}
         }
       },
+
       "put": {
         "operationId": "user_update",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
-          {
-            "$ref": "#/parameters/id"
-          },
-          {
-            "name": "data",
-            "in": "body",
-            "description": "实体数据",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
+          {"$ref": "#/parameters/id"},
+          {"$ref": "#/parameters/userData"}
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/Success"
-          }
+          "200": {"$ref": "#/responses/Success"}
         }
       },
+
       "delete": {
         "operationId": "user_destroy",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
-          {
-            "$ref": "#/parameters/id"
-          }
+          {"$ref": "#/parameters/id"}
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/Success"
-          }
+          "200": {"$ref": "#/responses/Success"}
         }
       }
+
     }
   },
+
   "definitions": {
+
     "User": {
       "properties": {
         "username": {
@@ -185,13 +166,13 @@
         },
         "disabled": {
           "type": "boolean"
+        },
+        "disallowBefore": {
+          "type": "number"
         }
       }
     },
-    "id": {
-      "type": "string",
-      "default": "id"
-    },
+
     "Error": {
       "properties": {
         "code": {
@@ -204,30 +185,11 @@
           "type": "object"
         }
       }
-    },
-    "Credential": {
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
-    "Pagination": {
-      "properties": {
-        "_page": {
-          "type": "number"
-        },
-        "_perPage": {
-          "type": "number"
-        }
-      }
     }
   },
 
   "parameters": {
+
     "id": {
       "name": "id",
       "description": "实体 ID",
@@ -235,40 +197,79 @@
       "required": true,
       "type": "string"
     },
+
     "credentials": {
       "name": "credentials",
-      "description": "凭证",
+      "description": "登录凭证",
       "in": "body",
       "schema": {
-        "$ref": "#/definitions/Credential"
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
       }
     },
-    "code": {
-      "description": "编码",
-      "name": "code",
-      "in": "query",
-      "type": "string"
-    },
-    "perpage": {
+
+    "perPage": {
       "description": "每页条数",
       "name": "_perPage",
       "in": "query",
       "type": "integer"
     },
+
     "page": {
       "description": "分页页数",
       "name": "_page",
       "in": "query",
       "type": "integer"
     },
+
     "filters": {
       "description": "筛选条件",
       "name": "_filters",
+      "in": "query",
+      "type": "string"
+    },
+
+    "sortField": {
+      "description": "排序字段",
+      "name": "_sortField",
+      "type": "string",
+      "in": "query"
+    },
+
+    "sortDir": {
+      "description": "排序方向",
+      "name": "_sortDir",
+      "type": "string",
+      "in": "query",
+      "enum": [
+        "ASC",
+        "DESC"
+      ]
+    },
+
+    "userData": {
+      "name": "data",
       "in": "body",
+      "description": "用户实体数据",
       "schema": {
-        "$ref": "#/definitions/Pagination"
+        "$ref": "#/definitions/User"
       }
+    },
+
+    "token": {
+      "name": "token",
+      "in": "query",
+      "description": "用户 Token",
+      "required": true,
+      "type": "string"
     }
+
   },
 
   "responses": {

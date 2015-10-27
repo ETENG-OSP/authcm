@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 function getInclude(req, Model) {
   try {
     var include = req.cm.param('_include');
@@ -31,6 +33,18 @@ function getWhere(req) {
   var filters = req.cm.param('_filters') || '{}';
   // filter
   var where = JSON.parse(filters);
+
+  var where = _.reduce(where, function(memo, value, key) {
+    if (typeof value === 'string') {
+      memo[key] = {
+        $like: value + '%'
+      };
+      return memo;
+    }
+    memo[key] = value;
+    return memo;
+  }, {});
+
   var appId = req.cm.appId();
   where.applicationId = appId;
   return where;

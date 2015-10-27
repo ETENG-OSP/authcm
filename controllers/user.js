@@ -1,7 +1,10 @@
-var User = require('../models').User;
-var Application = require('../models').Application;
+var models = require('../models');
 var resourceController = require('../utils/resource-controller');
 var nconf = require('../nconf');
+
+var User = models.User;
+var Application = models.Application;
+var AccessToken = models.AccessToken;
 
 var userController = resourceController(User);
 
@@ -11,10 +14,11 @@ userController.login = login;
 function signup(req, res, next) {
   var credentials = req.cm.param('credentials');
   var appId = req.cm.appId();
-  User
+
+  return User
     .signup(credentials, appId)
     .then(function(user) {
-      res.json({
+      return res.json({
         userId: user.id
       });
     })
@@ -24,23 +28,25 @@ function signup(req, res, next) {
 function login(req, res, next) {
   var credentials = req.cm.param('credentials');
   var appId = req.cm.appId();
-  User
+  var userId;
+
+  return User
     .login(credentials, appId)
     .then(function(user) {
-      user
-        .createAccessToken(nconf.get('feature:id'))
-        .then(function(token) {
-          res.json({
-            userId: user.id,
-            token: token
-          });
-        });
+      userId = user.id;
+      return AccessToken.issue({
+        sub: userId,
+        aud: appId,
+        iss: nconf.get('feature:id')
+      });
+    })
+    .then(function(accessToken) {
+      return res.json({
+        userId: userId,
+        token: accessToken.toString()
+      });
     })
     .catch(next);
-}
-
-function refresh(req, res, next) {
-  jwt.sign();
 }
 
 module.exports = userController;

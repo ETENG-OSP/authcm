@@ -18,20 +18,6 @@ module.exports = function(sequelize) {
       }
     }
 
-  }, {
-
-    classMethods: {
-
-      install: function(id, secret) {
-        var Application = this;
-        return Application.create({
-          id: id,
-          secret: secret
-        });
-      }
-
-    }
-
   });
 
 };
