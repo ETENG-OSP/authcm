@@ -1,19 +1,21 @@
 var models = require('../models');
+var Promise = require('bluebird');
 
 var AccessToken = models.AccessToken;
 
 module.exports = {
 
-  isRevoked: function(req, res, next) {
+  validate: function(req, res, next) {
     var token = req.cm.param('token');
     var accessToken = new AccessToken(token);
 
-    return accessToken
-      .isRevoked()
-      .then(function(result) {
-        return res.json({
-          revoked: result
-        });
+    return Promise
+      .all([
+        accessToken.isRevoked(),
+        accessToken.verify()
+      ])
+      .spread(function(revoked) {
+        return res.json({valid: !revoked});
       })
       .catch(next);
   },

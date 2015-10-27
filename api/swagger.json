@@ -27,10 +27,10 @@
       }
     },
 
-    "/token/is-revoked": {
+    "/token/validate": {
       "post": {
-        "operationId": "access-token_isRevoked",
-        "description": "检查用户的 AccessToken 是否被吊销。这个接口应该在 Token 完成校验后调用，以保证统一的吊销状态。",
+        "operationId": "access-token_validate",
+        "description": "检查 AccessToken 是否可用。包含有效性验证和吊销验证。",
         "tags": ["token"],
         "parameters": [
           {"$ref": "#/parameters/token"}

@@ -1,4 +1,5 @@
 var jwt = require('jsonwebtoken');
+var nconf = require('../nconf');
 
 module.exports = function() {
 
@@ -21,7 +22,7 @@ module.exports = function() {
       });
   };
 
-  AccessToken.prototype.verify = function(featureId) {
+  AccessToken.prototype.verify = function() {
     var Application = require('./index').Application;
     var token = this.token;
     var appId = jwt.decode(token).aud;
@@ -29,10 +30,10 @@ module.exports = function() {
       .findById(appId)
       .then(function(application) {
         var payload = jwt.verify(token, application.secret, {
-          issuer: featureId
+          issuer: nconf.get('feature:id')
         });
         return payload;
-      })
+      });
   };
 
   AccessToken.prototype.revoke = function() {
