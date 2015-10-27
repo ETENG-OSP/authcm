@@ -55,7 +55,7 @@ function resourceControllerFactory(Model, related) {
       var data = req.cm.param('data');
 
       return Model
-        .findById()
+        .findById(id)
         .then(function(entity) {
           return entity.update(data);
         })

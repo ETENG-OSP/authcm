@@ -97,8 +97,7 @@ module.exports = function(sequelize) {
 
     hooks: {
       beforeCreate: [hashPassword, setRevokedAt],
-      beforeUpdate: [hashPassword, setRevokedAt],
-      beforeBulkUpdate: [bulkHashPassword, bulkSetRevokedAt]
+      beforeUpdate: [hashPassword, setRevokedAt]
     }
 
   });
@@ -107,24 +106,18 @@ module.exports = function(sequelize) {
 
 function setRevokedAt(user) {
   if (user.disabled) {
-    user.revokedAt = createTimestamp();
+    user.revokedAt = Date.now();
   }
 }
 
-function bulkSetRevokedAt(instance) {
-}
-
 function hashPassword(user, options, done) {
+  if (!user.changed('password')) {
+    return done();
+  }
+
   bcrypt.hash(user.password, 8, function(err, hash) {
     if (err) throw err;
     user.password = hash;
     done();
   });
-}
-
-function bulkHashPassword(instance, done) {
-  if (instance.attributes.password) {
-    return hashPassword(instance.attributes, null, done);
-  }
-  return done();
 }

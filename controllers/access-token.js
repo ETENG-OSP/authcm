@@ -42,7 +42,8 @@ module.exports = {
         return res.json({
           token: token.toString()
         });
-      });
+      })
+      .catch(next);
   }
 
 };
