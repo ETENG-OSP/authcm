@@ -70,6 +70,16 @@ describe('user', function() {
     });
   });
 
+  describe('not revoke check', function() {
+    it('should not revoke', function() {
+      return token
+        .isRevoked()
+        .then(function(result) {
+          assert(result === false, 'token is revoked');
+        });
+    });
+  });
+
   describe('revoke', function() {
     it('should set timestamp', function() {
       return token
@@ -78,8 +88,18 @@ describe('user', function() {
           return User.findById(userId);
         })
         .then(function(user) {
-          console.log(user.toJSON());
+          assert(typeof user.revokedAt.getTime() === 'number', 'type mismatch');
         });
     })
+  });
+
+  describe('is revoke check', function() {
+    it('should not pass', function() {
+      return token
+        .isRevoked()
+        .then(function(result) {
+          assert(result, 'token not revoke');
+        });
+    });
   });
 });

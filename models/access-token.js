@@ -47,12 +47,17 @@ module.exports = function() {
   };
 
   AccessToken.prototype.isRevoked = function() {
+    var token = this.token;
     var payload = jwt.decode(token);
     var User = require('./index').User;
     return User
       .findById(payload.sub)
       .then(function(user) {
-        if (!user || user.revokedAt < payload.iat) {
+        if (!user || !user.revokedAt) {
+          return false;
+        }
+        var revokedTimestamp = Math.floor(user.revokedAt.getTime() / 1000);
+        if (revokedTimestamp < payload.iat) {
           return false;
         }
         return true;
@@ -60,10 +65,20 @@ module.exports = function() {
   };
 
   AccessToken.prototype.refresh = function() {
+    var self = this;
     return this
       .verify()
       .then(function(payload) {
-        return AccessToken.issue(payload);
+        return Promise.all([
+          self.isRevoked(),
+          AccessToken.issue(payload)
+        ]);
+      })
+      .spread(function(isRevoked, newAccessToken) {
+        if (isRevoked) {
+          throw new Error('token 已经被吊销');
+        }
+        return newAccessToken;
       });
   };
 
@@ -74,7 +89,3 @@ module.exports = function() {
   return AccessToken;
 
 };
-
-function createTimestamp() {
-  return Math.floor(Date.now() / 1000);
-}
