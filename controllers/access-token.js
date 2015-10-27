@@ -12,13 +12,13 @@ module.exports = {
       .isRevoked()
       .then(function(result) {
         return res.json({
-          banned: result
+          revoked: result
         });
       })
       .catch(next);
   },
 
-  revoke: function() {
+  revoke: function(req, res, next) {
     var token = req.cm.param('token');
     var accessToken = new AccessToken(token);
 
@@ -32,7 +32,7 @@ module.exports = {
       .catch(next);
   },
 
-  refresh: function() {
+  refresh: function(req, res, next) {
     var token = req.cm.param('token');
     var accessToken = new AccessToken(token);
 

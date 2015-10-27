@@ -22,6 +22,7 @@ module.exports = function() {
   };
 
   AccessToken.prototype.verify = function(featureId) {
+    var Application = require('./index').Application;
     var token = this.token;
     var appId = jwt.decode(token).aud;
     return Application

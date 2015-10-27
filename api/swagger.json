@@ -167,8 +167,19 @@
         "disabled": {
           "type": "boolean"
         },
-        "disallowBefore": {
+        "revokedAt": {
           "type": "number"
+        }
+      }
+    },
+
+    "Credentials": {
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         }
       }
     },
@@ -203,14 +214,7 @@
       "description": "登录凭证",
       "in": "body",
       "schema": {
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        }
+        "$ref": "#/definitions/Credentials"
       }
     },
 
