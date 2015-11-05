@@ -25,7 +25,24 @@ module.exports = function(sequelize) {
       allowNull: false
     },
 
-    revokedAt: Sequelize.DATE
+    revokedAt: {
+      type: Sequelize.TEXT,
+      get: function() {
+        try {
+          var result = JSON.parse(this.getDataValue('revokedAt'));
+          return result;
+        } catch (err) {
+          return;
+        }
+      },
+      set: function(val) {
+        try {
+          return this.setDataValue('revokedAt', JSON.stringify(val));
+        } catch (err) {
+          return;
+        }
+      }
+    }
 
   }, {
 

@@ -1,4 +1,5 @@
 var jwt = require('jsonwebtoken');
+var Promise = require('bluebird');
 var nconf = require('../nconf');
 
 module.exports = function() {
@@ -38,35 +39,33 @@ module.exports = function() {
       });
   };
 
-  AccessToken.prototype.revoke = function() {
-    var token = this.token;
-    var userId = jwt.decode(token).sub;
+  AccessToken.prototype.revoke = Promise.coroutine(function* () {
     var User = require('./index').User;
-    return User
-      .findById(userId)
-      .then(function(user) {
-        user.set('revokedAt', Date.now());
-        return user.save();
-      });
-  };
-
-  AccessToken.prototype.isRevoked = function() {
     var token = this.token;
     var payload = jwt.decode(token);
+
+    var user = yield User.findById(payload.sub);
+    var revokedAt = user.revokedAt || {};
+    revokedAt[payload.type] = Math.floor(Date.now() / 1000);
+    user.set('revokedAt', revokedAt);
+    return yield user.save();
+  });
+
+  AccessToken.prototype.isRevoked = Promise.coroutine(function* () {
     var User = require('./index').User;
-    return User
-      .findById(payload.sub)
-      .then(function(user) {
-        if (!user || !user.revokedAt) {
-          return false;
-        }
-        var revokedTimestamp = Math.floor(user.revokedAt.getTime() / 1000);
-        if (revokedTimestamp < payload.iat) {
-          return false;
-        }
-        return true;
-      });
-  };
+    var token = this.token;
+    var payload = jwt.decode(token);
+
+    var user = yield User.findById(payload.sub);
+    if (!user || !user.revokedAt) {
+      return false;
+    }
+    var revokedTimestamp = user.revokedAt[payload.type];
+    if (revokedTimestamp < payload.iat) {
+      return false;
+    }
+    return true;
+  });
 
   AccessToken.prototype.refresh = function() {
     var self = this;
