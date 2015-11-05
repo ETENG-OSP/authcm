@@ -1,117 +1,60 @@
-var _ = require('underscore');
-var models = require('../models');
+var remoteMethod = require('./remote-method');
 var query = require('./query');
 
-function resourceControllerFactory(Model, related) {
+function resourceControllerFactory(Model) {
 
   return {
 
-    findAll: function(req, res, next) {
-      return Model
-        .findAndCountAll({
-          where: query.getWhere(req),
-          include: query.getInclude(req, Model),
-          order: query.getOrder(req),
-          offset: query.getOffset(req),
-          limit: query.getLimit(req)
-        })
-        .then(function(result) {
-          var count = result.count;
-          var entities = result.rows;
-          res.set('X-Total-Count', count);
-          return res.json(entities);
-        })
-        .catch(next);
-    },
+    findAll: remoteMethod(function* (req, res) {
+      var results = yield Model.findAndCountAll({
+        where: query.getWhere(req),
+        include: query.getInclude(req, Model),
+        order: query.getOrder(req),
+        offset: query.getOffset(req),
+        limit: query.getLimit(req)
+      });
 
-    create: function(req, res, next) {
+      var count = results.count;
+      var instances = results.rows;
+
+      res.set('X-Total-Count', count);
+      return instances;
+    }),
+
+    create: remoteMethod(function* (req, res) {
       var data = req.cm.param('data');
       var appId = req.cm.appId();
       data.applicationId = appId;
 
-      return Model
-        .create(data)
-        .then(function(entity) {
-          return res.json(entity);
-        })
-        .catch(next);
-    },
+      var instance = yield Model.create(data);
+      return instance;
+    }),
 
-    findById: function(req, res, next) {
+    findById: remoteMethod(function* (req, res, next) {
       var id = req.cm.param('id');
 
-      return Model
-        .findById(id, {
-          include: query.getInclude(req, Model)
-        })
-        .then(function(entity) {
-          return res.json(entity);
-        })
-        .catch(next);
-    },
+      return yield Model.findById(id, {
+        include: query.getInclude(req, Model)
+      });
+    }),
 
-    update: function(req, res, next) {
+    update: remoteMethod(function* (req, res) {
       var id = req.cm.param('id');
       var data = req.cm.param('data');
 
-      return Model
-        .findById(id)
-        .then(function(entity) {
-          return entity.update(data);
-        })
-        .then(function(entity) {
-          return res.json(entity);
-        })
-        .catch(next);
+      var instance = yield Model.findById(id);
+      return yield instance.update(data);
+    }),
 
-      // return Model
-      //   .update(data, {where: {id: id}})
-      //   .then(function(result) {
-      //     return Model.findOne({where: {id: id}});
-      //   })
-      //   .then(function(entity) {
-      //     // return res.json(entity);
-      //     return updateRelated(entity, data, related)
-      //       .then(function() {
-      //         return res.json(entity);
-      //       });
-      //   })
-      //   .catch(next);
-    },
-
-    destroy: function(req, res, next) {
+    destroy: remoteMethod(function* (req, res) {
       var id = req.cm.param('id');
 
-      return Model
-        .findById(id)
-        .then(function(instance) {
-          return instance.destroy();
-        })
-        .then(function(instance) {
-          return res.json(instance);
-        })
-        .catch(next);
-    }
+      var instance = yield Model.findById(id);
+      return yield instance.destroy();
+    })
 
   };
 
 }
-
-// function updateRelated(entity, data, related) {
-//   var taskArray = _.reduce(data, function(memo, value, key) {
-//     if (value && related && related[key]) {
-//       var fnName = 'set' + capitalizeFirstLetter(key);
-//
-//       console.log('fnName', fnName);
-//       memo.push(entity[fnName](value));
-//     }
-//     return memo;
-//   }, []);
-//   return Promise.all(taskArray);
-// }
-//
-// function capitalizeFirstLetter(string) {
-//   return string.charAt(0).toUpperCase() + string.slice(1);
-// }
 
 module.exports = resourceControllerFactory;
