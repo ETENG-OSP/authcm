@@ -11,7 +11,7 @@ var param = require('./utils/param');
 swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
 
   var routerOptions = {
-    controllers: __dirname + '/' + nconf.get('swagger:controllers')
+    controllers: `${__dirname}/${nconf.get('swagger:controllers')}`
   };
 
   var securityOptions = {

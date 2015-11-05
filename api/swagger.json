@@ -65,7 +65,14 @@
         "tags": ["auth"],
         "description": "用户登录。登录后会返回 AccessToken。",
         "parameters": [
-          {"$ref": "#/parameters/credentials"}
+          {
+            "name": "credentials",
+            "description": "登录凭证",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -80,7 +87,14 @@
         "operationId": "user_signup",
         "tags": ["auth"],
         "parameters": [
-          {"$ref": "#/parameters/credentials"}
+          {
+            "name": "credentials",
+            "description": "登录凭证",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Signup"
+            }
+          }
         ],
         "responses": {
           "200": {"$ref": "#/responses/Success"}
@@ -161,6 +175,7 @@
   "definitions": {
 
     "User": {
+      "type": "object",
       "properties": {
         "username": {
           "type": "string"
@@ -177,7 +192,23 @@
       }
     },
 
-    "Credentials": {
+    "Login": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+
+    "Signup": {
+      "type": "object",
       "properties": {
         "username": {
           "type": "string"
@@ -189,6 +220,7 @@
     },
 
     "Error": {
+      "type": "object",
       "properties": {
         "code": {
           "type": "integer"
@@ -211,15 +243,6 @@
       "in": "path",
       "required": true,
       "type": "string"
-    },
-
-    "credentials": {
-      "name": "credentials",
-      "description": "登录凭证",
-      "in": "body",
-      "schema": {
-        "$ref": "#/definitions/Credentials"
-      }
     },
 
     "perPage": {

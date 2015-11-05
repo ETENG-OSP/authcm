@@ -26,8 +26,7 @@ function resourceControllerFactory(Model) {
       var appId = req.cm.appId();
       data.applicationId = appId;
 
-      var instance = yield Model.create(data);
-      return instance;
+      return yield Model.create(data);
     }),
 
     findById: remoteMethod(function* (req, res, next) {

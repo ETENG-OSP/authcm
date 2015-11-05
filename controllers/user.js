@@ -1,4 +1,5 @@
 var models = require('../models');
+var remoteMethod = require('../utils/remote-method');
 var resourceController = require('../utils/resource-controller');
 var nconf = require('../nconf');
 
@@ -8,45 +9,32 @@ var AccessToken = models.AccessToken;
 
 var userController = resourceController(User);
 
-userController.signup = signup;
-userController.login = login;
-
-function signup(req, res, next) {
+userController.signup = remoteMethod(function* (req) {
   var credentials = req.cm.param('credentials');
   var appId = req.cm.appId();
 
-  return User
-    .signup(credentials, appId)
-    .then(function(user) {
-      return res.json({
-        userId: user.id
-      });
-    })
-    .catch(next);
-}
+  var user = yield User.signup(credentials, appId);
+  return {
+    userId: user.id
+  };
+});
 
-function login(req, res, next) {
+userController.login = remoteMethod(function* (req) {
   var credentials = req.cm.param('credentials');
   var appId = req.cm.appId();
-  var userId;
 
-  return User
-    .login(credentials, appId)
-    .then(function(user) {
-      userId = user.id;
-      return AccessToken.issue({
-        sub: userId,
-        aud: appId,
-        iss: nconf.get('feature:id')
-      });
-    })
-    .then(function(accessToken) {
-      return res.json({
-        userId: userId,
-        token: accessToken.toString()
-      });
-    })
-    .catch(next);
-}
+  var user = yield User.login(credentials, appId);
+  var userId = user.id;
+  var accessToken = yield AccessToken.issue(credentials.type, {
+    sub: userId,
+    aud: appId,
+    iss: nconf.get('feature:id')
+  });
+
+  return {
+    userId: userId,
+    token: accessToken.toString()
+  };
+});
 
 module.exports = userController;

@@ -7,12 +7,14 @@ module.exports = function() {
     this.token = token;
   }
 
-  AccessToken.issue = function(payload) {
+  AccessToken.issue = function(type, payload) {
     var Application = require('./index').Application;
     return Application
       .findById(payload.aud)
       .then(function(application) {
-        var token = jwt.sign({}, application.secret, {
+        var token = jwt.sign({
+          type: type
+        }, application.secret, {
           audience: payload.aud,
           subject: payload.sub,
           issuer: payload.iss,
