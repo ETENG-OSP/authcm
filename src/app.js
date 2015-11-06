@@ -5,6 +5,7 @@ var cors = require('cors');
 var swaggerTools = require('swagger-tools');
 var errorhandler = require('errorhandler');
 var Promise = require('bluebird');
+var morgan = require('morgan');
 
 var security = require('./security');
 var param = require('./param');
@@ -46,6 +47,7 @@ class Application {
 
     app.use(cors(this.corsOptions));
     app.use(middleware.swaggerUi());
+    app.use(morgan('combined'));
     app.use(security(this.securityOptions));
     app.use(param());
     app.use(middleware.swaggerMetadata());
