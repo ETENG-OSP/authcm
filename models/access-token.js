@@ -61,6 +61,9 @@ module.exports = function() {
       return false;
     }
     var revokedTimestamp = user.revokedAt[payload.type];
+    if (!revokedTimestamp) {
+      return false;
+    }
     if (revokedTimestamp < payload.iat) {
       return false;
     }

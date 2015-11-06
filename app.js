@@ -1,44 +1,69 @@
+'use strict';
+
 var express = require('express');
 var cors = require('cors');
 var swaggerTools = require('swagger-tools');
 var errorhandler = require('errorhandler');
+var Promise = require('bluebird');
 
-var nconf = require('./nconf');
-var swaggerObject = require('./api/swagger');
 var security = require('./utils/security');
 var param = require('./utils/param');
 
-swaggerTools.initializeMiddleware(swaggerObject, function(middleware) {
+class Application {
 
-  var routerOptions = {
-    controllers: `${__dirname}/${nconf.get('swagger:controllers')}`
-  };
+  constructor() {
+    this.options = require('./nconf').get();
+    this.swaggerObject = require('./api/swagger');
+    this.corsOptions = {
+      exposedHeaders: ['X-Total-Count']
+    };
+    this.routerOptions = {
+      controllers: `${__dirname}/${this.options.swagger.controllers}`
+    };
+    this.securityOptions = {
+      tokenName: this.options.security.tokenName,
+      id: this.options.feature.id,
+      secret: this.options.feature.secret
+    };
+    this.corsOptions = {
+      exposedHeaders: ['X-Total-Count']
+    };
+  }
 
-  var securityOptions = {
-    tokenName: nconf.get('security:tokenName'),
-    id: nconf.get('feature:id'),
-    secret: nconf.get('feature:secret')
-  };
+  initialize() {
+    var app = express();
+    this.app = app;
+    var deferred = Promise.defer();
+    swaggerTools.initializeMiddleware(this.swaggerObject, (middleware) => {
+      this.loadMiddlewares(middleware);
+      deferred.resolve(app);
+    });
+    return deferred.promise;
+  }
 
-  var corsOptions = {
-    exposedHeaders: ['X-Total-Count']
-  };
+  loadMiddlewares(middleware) {
+    var app = this.app;
 
-  var app = express();
-  app.use(cors(corsOptions));
-  app.use(middleware.swaggerUi());
+    app.use(cors(this.corsOptions));
+    app.use(middleware.swaggerUi());
+    app.use(security(this.securityOptions));
+    app.use(param());
+    app.use(middleware.swaggerMetadata());
+    app.use(middleware.swaggerRouter(this.routerOptions));
+    app.use(errorhandler());
+    // app.use(require('./inspector'));
+  }
 
-  app.use(security(securityOptions));
-  app.use(param());
+  start() {
+    return this.initialize().then((app) => {
+      var deferred = Promise.defer();
+      app.listen(this.options.port, function() {
+        deferred.resolve();
+      });
+      return deferred.promise;
+    });
+  }
 
-  app.use(middleware.swaggerMetadata());
-  app.use(middleware.swaggerRouter(routerOptions));
+}
 
-  app.use(errorhandler());
-  // app.use(require('./inspector'));
-
-  app.listen(nconf.get('port'), function() {
-    console.log('started');
-  });
-
-});
+module.exports = new Application();

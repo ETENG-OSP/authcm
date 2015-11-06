@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "heapdump": "^0.3.7",
-    "memwatch-next": "^0.2.9"
+    "memwatch-next": "^0.2.9",
+    "request": "^2.65.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
