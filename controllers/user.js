@@ -1,6 +1,6 @@
 var models = require('../models');
-var remoteMethod = require('../utils/remote-method');
-var resourceController = require('../utils/resource-controller');
+var remoteMethod = require('../src/remote-method');
+var resourceController = require('../src/resource-controller');
 var nconf = require('../nconf');
 
 var User = models.User;

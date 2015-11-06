@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var assert = require('assert');
 var faker = require('faker');
 var requestAsync = Promise.promisify(require('request'));
-var app = require('../app');
+var app = require('../src/app');
 
 var authorization = {'cm-api-key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyIiwiaXNzIjoiMSJ9.XrVM6EOHORin2ivhpUQXaoLliKRF5SKCGRfu5lYtDfs'};
 var host = 'http://localhost:3002/';

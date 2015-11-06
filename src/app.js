@@ -6,19 +6,19 @@ var swaggerTools = require('swagger-tools');
 var errorhandler = require('errorhandler');
 var Promise = require('bluebird');
 
-var security = require('./utils/security');
-var param = require('./utils/param');
+var security = require('./security');
+var param = require('./param');
 
 class Application {
 
   constructor() {
-    this.options = require('./nconf').get();
-    this.swaggerObject = require('./api/swagger');
+    this.options = require('../nconf').get();
+    this.swaggerObject = require('../api/swagger');
     this.corsOptions = {
       exposedHeaders: ['X-Total-Count']
     };
     this.routerOptions = {
-      controllers: `${__dirname}/${this.options.swagger.controllers}`
+      controllers: `${__dirname}/../${this.options.swagger.controllers}`
     };
     this.securityOptions = {
       tokenName: this.options.security.tokenName,
