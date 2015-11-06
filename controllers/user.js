@@ -37,4 +37,28 @@ userController.login = remoteMethod(function* (req) {
   };
 });
 
+userController.loginAndRevoke = remoteMethod(function* (req) {
+  var credentials = req.cm.param('credentials');
+  var appId = req.cm.appId();
+
+  var user = yield User.login(credentials, appId);
+  var userId = user.id;
+  var accessToken = yield AccessToken.issue(credentials.type, {
+    sub: userId,
+    aud: appId,
+    iss: nconf.get('feature:id')
+  });
+  yield accessToken.revoke();
+  var accessToken = yield AccessToken.issue(credentials.type, {
+    sub: userId,
+    aud: appId,
+    iss: nconf.get('feature:id')
+  });
+
+  return {
+    userId: userId,
+    token: accessToken.toString()
+  };
+});
+
 module.exports = userController;
