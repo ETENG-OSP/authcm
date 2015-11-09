@@ -64,7 +64,7 @@ module.exports = function() {
     if (!revokedTimestamp) {
       return false;
     }
-    if (revokedTimestamp < payload.iat) {
+    if (revokedTimestamp <= payload.iat) {
       return false;
     }
     return true;
