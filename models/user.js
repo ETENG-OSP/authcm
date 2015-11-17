@@ -8,20 +8,20 @@ module.exports = function(sequelize) {
   return sequelize.define('user', {
 
     id: {
-      type: 'string',
+      type: Sequelize.STRING,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
     },
 
     username: {
-      type: 'string',
+      type: Sequelize.STRING,
       allowNull: false
     },
 
     disabled: Sequelize.BOOLEAN,
 
     password: {
-      type: 'string',
+      type: Sequelize.STRING,
       allowNull: false
     },
 
