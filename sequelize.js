@@ -1,11 +1,11 @@
 var Sequelize = require('sequelize');
 
 var nconf = require('./nconf');
-
 var database = nconf.get('database');
 var username = nconf.get('username');
-var password = nconf.get('passoword');
+var password = nconf.get('password');
 var options = {
+  host: nconf.get('host'),
   dialect: nconf.get('dialect'),
   storage: __dirname + '/' + nconf.get('storage')
 };

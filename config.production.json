@@ -1,0 +1,22 @@
+{
+  "port": 3012,
+
+  "host": "rds391p1q7kv102s2976.mysql.rds.aliyuncs.com",
+  "database": "cm_auth",
+  "dialect": "mysql",
+  "username": "auth_admin",
+  "password": "xSeries330",
+
+  "swagger": {
+    "controllers": "./controllers"
+  },
+
+  "security": {
+    "tokenName": ["cm-api-key", "api_key"]
+  },
+
+  "feature": {
+    "id": "1",
+    "secret": "MjY5ZmM5Y2YtZWI0My00ZmY5LWIxNzQtZDk4NGY0MTdhZDUx"
+  }
+}
