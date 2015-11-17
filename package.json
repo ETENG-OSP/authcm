@@ -15,14 +15,15 @@
     "express-jwt": "^3.1.0",
     "jsonwebtoken": "^5.4.1",
     "morgan": "^1.6.1",
+    "mysql": "^2.9.0",
     "nconf": "^0.8.2",
     "sequelize": "^3.12.2",
-    "sqlite3": "^3.1.0",
     "swagger-tools": "^0.9.7",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1"
   },
   "devDependencies": {
+    "sqlite3": "^3.1.0",
     "faker": "^3.0.1",
     "heapdump": "^0.3.7",
     "memwatch-next": "^0.2.9",
