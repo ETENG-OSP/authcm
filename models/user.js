@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 module.exports = function(sequelize) {
 
-  return sequelize.define('user', {
+  var User = sequelize.define('user', {
 
     id: {
       type: Sequelize.UUID,
@@ -119,17 +119,23 @@ module.exports = function(sequelize) {
     }
 
   });
+  return User;
+
+  function setRevokedAt(user, options, done) {
+    if (user.disabled) {
+      user.revokedAt = _.mapObject(user.revokedAt, function(val, key) {
+        return Date.now();
+      });
+      return done();
+    }else{
+      done();
+    }
+
+  }
 
 };
 
-function setRevokedAt(user) {
-  if (user.disabled) {
-    user.revokedAt = _.mapObject(user.revokedAt, function(val, key) {
-      return Date.now();
-    });
-    done();
-  }
-}
+
 
 function hashPassword(user, options, done) {
   if (!user.changed('password')) {
