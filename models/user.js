@@ -2,6 +2,7 @@ var Sequelize = require('sequelize');
 var assert = require('assert');
 var bcrypt = require('bcrypt');
 var uuid = require('uuid');
+var _ = require('underscore');
 
 module.exports = function(sequelize) {
 
@@ -123,7 +124,10 @@ module.exports = function(sequelize) {
 
 function setRevokedAt(user) {
   if (user.disabled) {
-    user.revokedAt = Date.now();
+    user.revokedAt = _.mapObject(user.revokedAt, function(val, key) {
+      return Date.now();
+    });
+    done();
   }
 }
 
