@@ -77,7 +77,7 @@ module.exports = function() {
       .then(function(payload) {
         return Promise.all([
           self.isRevoked(),
-          AccessToken.issue(payload)
+          AccessToken.issue(payload.type, payload)
         ]);
       })
       .spread(function(isRevoked, newAccessToken) {
