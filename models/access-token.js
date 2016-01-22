@@ -70,11 +70,12 @@ module.exports = function() {
     return true;
   });
 
-  AccessToken.prototype.refresh = function() {
+  AccessToken.prototype.refresh = function(type) {
     var self = this;
     return this
       .verify()
       .then(function(payload) {
+        if(type)payload.type=type;
         return Promise.all([
           self.isRevoked(),
           AccessToken.issue(payload.type, payload)
