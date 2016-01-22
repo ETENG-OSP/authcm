@@ -75,7 +75,7 @@ module.exports = function() {
     return this
       .verify()
       .then(function(payload) {
-        if(type)payload.type=type;
+        if(type)payload.type = type;
         return Promise.all([
           self.isRevoked(),
           AccessToken.issue(payload.type, payload)
