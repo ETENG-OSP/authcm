@@ -329,7 +329,6 @@
     "name": "type",
     "in": "query",
     "description": "登录类型",
-    "required": true,
     "type": "string"
   }
 
