@@ -62,7 +62,7 @@
 
     "/token/refreshAndInvoke": {
       "post": {
-        "operationId": "access-token_refresh-and-invoke",
+        "operationId": "access-token_refreshAndInvoke",
         "description": "刷新 AccessToken 的有效期，将时间延长到 refresh 接口被调用的七天后。调用后应该把新的 token 存储到应用中同时将相同类型的所有token变为失效!",
         "tags": ["token"],
         "parameters": [
