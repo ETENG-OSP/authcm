@@ -47,6 +47,21 @@ module.exports = {
         });
       })
       .catch(next);
+  },
+
+  refreshAndInvoke : function(req,res,next){
+    var token = req.cm.param('token');
+    var accessToken = new AccessToken(token);
+    var type = req.cm.param('type');
+
+    return accessToken
+        .refreshAndInvoke(type)
+        .then(function(token) {
+          return res.json({
+            token: token.toString()
+          });
+        })
+        .catch(next);
   }
 
 };
