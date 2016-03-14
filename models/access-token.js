@@ -103,7 +103,10 @@ module.exports = function() {
             AccessToken.issue(payload.type, payload)
           ]);
         })
-        .spread(function(isRevoked, newAccessToken) {
+        .spread(function(isRevoked , user, newAccessToken) {
+          if (isRevoked) {
+            throw new Error('token 已经被吊销');
+          }
           return newAccessToken;
         });
   };
