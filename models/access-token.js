@@ -39,13 +39,15 @@ module.exports = function() {
       });
   };
 
-  AccessToken.prototype.revoke = Promise.coroutine(function* () {
+  AccessToken.prototype.revoke = Promise.coroutine(function* (type) {
     var User = require('./index').User;
     var token = this.token;
     var payload = jwt.decode(token);
 
     var user = yield User.findById(payload.sub);
     var revokedAt = user.revokedAt || {};
+    if(type)
+      payload.type = type;
     revokedAt[payload.type] = Math.floor(Date.now() / 1000);
     user.set('revokedAt', revokedAt);
     return yield user.save();
@@ -87,6 +89,23 @@ module.exports = function() {
         }
         return newAccessToken;
       });
+  };
+
+  AccessToken.prototype.refreshAndInvoke = function(type){
+    var self=this;
+    return this
+        .verify()
+        .then(function(payload) {
+          if(type)payload.type = type;
+          return Promise.all([
+            self.isRevoked(),
+            self.revoke(type),
+            AccessToken.issue(payload.type, payload)
+          ]);
+        })
+        .spread(function(isRevoked, newAccessToken) {
+          return newAccessToken;
+        });
   };
 
   AccessToken.prototype.toString = function() {
